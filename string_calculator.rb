@@ -4,10 +4,9 @@ class StringCalculator
 
     number_array = if numbers.start_with?("//")
                      delimiters, numbers = extract_delimiters(numbers)
-                     regex_delimiters = Regexp.union(delimiters)
-                     numbers.split(regex_delimiters).map(&:to_i)
+                     prepare_number_array(numbers, delimiters)
     else
-                    numbers.split(/,|\n/).map(&:to_i)
+                     prepare_number_array(numbers, delimiters=nil)
     end
 
     validate_and_raise(number_array)
@@ -31,5 +30,14 @@ class StringCalculator
     def validate_and_raise(numbers)
       negatives = numbers.select { |n| n < 0 }
       raise "negative not allowed- #{negatives.join(', ')}" unless negatives.empty?
+    end
+
+    def prepare_number_array(numbers, delimiters=nil)
+      if delimiters.nil?
+        numbers.split(/,|\n/).map(&:to_i)
+      else
+        delimiters = Regexp.union(delimiters)
+        numbers.split(delimiters).map(&:to_i)
+      end
     end
 end
