@@ -11,6 +11,6 @@ class StringCalculator
     negatives = number_array.select { |n| n < 0 }
     raise "negative not allowed- #{negatives.join(', ')}" unless negatives.empty?
 
-    number_array.sum
+    number_array.reject { |n| n > 1000 }.sum
   end
 end
