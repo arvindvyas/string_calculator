@@ -2,15 +2,15 @@ class StringCalculator
   def add(numbers)
     return 0 if numbers.empty?
 
-    if numbers.start_with?("//")
-      delimiters, numbers = extract_delimiters(numbers)
-      regex_delimiters = Regexp.union(delimiters)
-      number_array = numbers.split(regex_delimiters).map(&:to_i)
+    number_array = if numbers.start_with?("//")
+                     delimiters, numbers = extract_delimiters(numbers)
+                     regex_delimiters = Regexp.union(delimiters)
+                     numbers.split(regex_delimiters).map(&:to_i)
     else
-      number_array = numbers.split(/,|\n/).map(&:to_i)
+                    numbers.split(/,|\n/).map(&:to_i)
     end
-    negatives = number_array.select { |n| n < 0 }
-    raise "negative not allowed- #{negatives.join(', ')}" unless negatives.empty?
+
+    validate_and_raise(number_array)
 
     number_array.reject { |n| n > 1000 }.sum
   end
@@ -26,5 +26,10 @@ class StringCalculator
         numbers = numbers[4..-1]
       end
       [delimiters, numbers]
+    end
+
+    def validate_and_raise(numbers)
+      negatives = numbers.select { |n| n < 0 }
+      raise "negative not allowed- #{negatives.join(', ')}" unless negatives.empty?
     end
 end
