@@ -21,6 +21,11 @@ describe StringCalculator do
     it "returns the sum of multiple numbers" do
       expect(calculator.add("1,2,3,4")).to eq(10)
     end
+
+    it "returns the sum of numbers with new lines" do
+      expect(calculator.add("1\n2,3")).to eq(6)
+    end
+
   end
 
 end
